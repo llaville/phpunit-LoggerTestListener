@@ -1,0 +1,321 @@
+
+= PHPUnit Test Suite listener for compatible PSR-3 logger
+
+Goal is to provide a standard PHPUnit Listener that is capable to send unit test results
+to any PSR-3 compatible logger.
+
+The listener implement the `PHPUnit_Framework_TestListener` interface,
+and used these log levels/events mapping.
+
+*ERROR*::
+    - `addError()`, when an error occurred
+    - `addFailure()`, when a failure occured
+
+*WARNING*::
+    - `addIncompleteTest()`, on incomplete test
+    - `addRiskyTest()`, on risky test
+    - `addSkippedTest()`, when a test was skipped
+
+*INFO*::
+    - `startTest()`, when a test started
+    - `endTest()`, when a test ended
+
+*NOTICE*::
+    - `startTestSuite()`, when a test suite started
+    - `endTestSuite()`, when a test suite ended
+
+== Installation
+
+IMPORTANT: For demonstration purpose, a Growl Handler was used but is not yet available as a GitHub or Packagist version.
+Source code is provided in `extra` folder.
+
+[source,bash]
+----
+$ php composer.phar require bartlett/phpunit-loggertestlistener=~1.0
+----
+
+The monolog version used a https://github.com/Seldaek/monolog/pull/411[filter feature]
+that is not yet included in Monolog distribution.
+
+If you want to have a look on filter capability, add at least in your `composer.json` the following lines :
+
+[source,json]
+----
+    "require": {
+        "monolog/monolog": "dev-FilterFeature as 1.10"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/llaville/monolog"
+        }
+    ]
+----
+
+and update your dependencies
+[source,bash]
+----
+$ php composer.phar update
+----
+
+== Usage with basic PSR-3 Logger
+
+We will use a very basic PSR-3 logger for our first steps. Suppose we have such following implementation.
+
+[source,php]
+----
+<?php
+
+use Psr\Log\AbstractLogger;
+
+class YourLogger extends AbstractLogger
+{
+    private $channel;
+
+    public function __construct($name = 'YourLoggerChannel')
+    {
+        $this->channel = $name;
+    }
+
+    public function log($level, $message, array $context = array())
+    {
+        error_log(
+            sprintf(
+                '%s.%s: %s',
+                $this->channel,
+                strtoupper($level),
+                $this->interpolate($message, $context)
+            )
+        );
+    }
+
+    protected function interpolate($message, array $context = array())
+    {
+        // build a replacement array with braces around the context keys
+        $replace = array();
+        foreach ($context as $key => $val) {
+            $replace['{' . $key . '}'] = $val;
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
+    }
+}
+----
+
+Add in your `phpunit.xml` configuration file the `Bartlett\LoggerTestListener` test listener,
+using our basic PSR-3 logger (`YourLogger`).
+
+[source,xml]
+.Using default behavior of your logger
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="YourLogger" />
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>
+----
+
+We can change name of the channel (from default `YourLoggerChannel` to value `YourPSR3Logger`) as follow :
+
+[source,xml]
+.Configure the channel name of your logger
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="YourLogger">
+                    <arguments>
+                        <string>YourPSR3Logger</string>
+                    </arguments>
+                </object>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>
+----
+
+If you want to have advanced logging strategies, I suggest you to have a look on famous
+https://github.com/Seldaek/monolog[Monolog] PHP Library.
+
+== Usage with Monolog
+
+Without handler (then default output will be send to STDERR), we could have such kind of configuration,
+with logger channel name set to `YourMonologChannel`.
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="Monolog\Logger">
+                    <arguments>
+                        <string>YourMonologChannel</string>
+                    </arguments>
+                </object>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>
+----
+
+Add some handlers, with basic logging Monolog Strategy (filter on level only).
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="Monolog\Logger">
+                    <arguments>
+                        <string>YourMonologChannel</string>
+                        <array>
+                            <element>
+                                <object class="Monolog\Handler\StreamHandler">
+                                    <arguments>
+                                        <string>/var/logs/monolog.log</string>
+                                    </arguments>
+                                </object>
+                            </element>
+                            <element>
+                                <object class="Bartlett\GrowlHandler">
+                                    <arguments>
+                                        <array></array>
+                                        <integer>250</integer> <!-- NOTICE -->
+                                    </arguments>
+                                </object>
+                            </element>
+                        </array>
+                    </arguments>
+                </object>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>
+----
+
+WARNING: When we used desktop notification such as http://growl.info/[growl],
+or mobile notifications powered by https://pushover.net/[Pushover], you probably don't want
+to receive all log records, but just the most important ones (errors, failures, testsuites ended).
+
+Actually Monolog can't do this.
+So this is the reason of the https://github.com/Seldaek/monolog/pull/411[Pull Request] to add filter capability.
+
+Now create a pre-defined logger with all handlers we wished on and the filter rules for each handlers.
+
+[source,php]
+----
+<?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\GrowlHandler;
+
+class YourMonolog extends Logger
+{
+    public function __construct($name = 'PHPUnit')
+    {
+        $filter1 = function($record, $handlerLevel) {
+            if ($record['level'] < $handlerLevel) {
+                return false;
+            }
+            if ($record['level'] > $handlerLevel) {
+                return true;
+            }
+            return (
+                preg_match('/^TestSuite(.*)ended\./', $record['message']) === 1
+                and
+                $record['level'] == $handlerLevel
+            );
+        };
+
+        $stream = new StreamHandler('/var/logs/monolog.log');
+
+        $growl  = new GrowlHandler(array(), Logger::NOTICE);
+        $growl->pushFilter($filter1);
+
+        parent::__construct($name, array($stream, $growl));
+    }
+}
+----
+
+And of course, declare our new listener like that :
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="YourMonolog" />
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>
+----
+
+We will get all PHPUnit log messages recorded via the `StreamHandler`,
+and only important notifications via `GrowlHandler` (see filter rule with callback `$filter1`).
+
+Run the test suite example :
+[source,bash]
+----
+$ php phpunit-4.2.2.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+----
+
+And you will get something like:
+----
+PHPUnit 4.2.2 by Sebastian Bergmann.
+
+Configuration read from /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+
+IF
+
+Time: 908 ms, Memory: 5.25Mb
+
+There was 1 failure:
+
+1) Your\Name_Space\YourTestSuite::testFailure
+Failed asserting that an array is empty.
+
+/home/github/phpunit-LoggerTestListener/examples/testSuite.php:20
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1, Incomplete: 1.
+----
+
+.Test Suite results with Monolog Stream Handler
+----
+[2014-08-26 10:48:40] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. [] []
+[2014-08-26 10:48:40] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. [] []
+[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testIncomplete' started. [] []
+[2014-08-26 10:48:40] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. [] []
+[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testIncomplete' ended. [] []
+[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testFailure' started. [] []
+[2014-08-26 10:48:40] PHPUnit.ERROR: Test 'testFailure' failed. [] []
+[2014-08-26 10:48:41] PHPUnit.INFO: Test 'testFailure' ended. [] []
+[2014-08-26 10:48:41] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. [] []
+[2014-08-26 10:48:41] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 [] []
+----
+
+.Test Suite results with Growl Handler
+image:examples/growlOutput.png[alt="growl notifications"]
+
+NOTE: Produced by http://www.growlforwindows.com/gfw/[Growl for Windows] (2.0.9 and Smokestack display)
+with http://growl.laurent-laville.org/[PHP GNTP library].
+
+== License
+
+LoggerTestListener is licensed under the BSD-3 Clause License - see the LICENSE file for details

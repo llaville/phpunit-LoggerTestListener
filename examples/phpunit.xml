@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit 
+    backupGlobals="true"
+    backupStaticAttributes="false"
+    bootstrap="bootstrap.php"
+    colors="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnRisky="false"
+    stopOnSkipped="false"
+    strict="true"
+    verbose="false"
+>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="YourMonolog" />
+            </arguments>  
+        </listener>
+    </listeners>
+    <testsuites>
+        <testsuite name="Demo Test Suite">
+            <file>testSuite.php</file>
+        </testsuite>
+    </testsuites>    
+</phpunit>

@@ -1,0 +1,38 @@
+{
+    "name": "bartlett/phpunit-loggertestlistener",
+    "description": "PHPUnit Test Suite listener for compatible PSR-3 logger",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "homepage": "https://github.com/llaville/phpunit-LoggerTestListener",
+    "support": {
+        "source": "https://github.com/llaville/phpunit-LoggerTestListener",
+        "issues": "https://github.com/llaville/phpunit-LoggerTestListener/issues"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "psr/log": "~1.0",
+        "monolog/monolog": "dev-FilterFeature as 1.10"
+    },
+    "suggest": {
+        "monolog/monolog": "For advanced logging strategies"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/llaville/monolog"
+        }
+    ],    
+    "authors": [
+        {
+            "name": "Laurent Laville",
+            "email": "pear@laurent-laville.org",
+            "homepage": "https://github.com/llaville",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Bartlett\\": "src/"
+        }
+    }
+}
