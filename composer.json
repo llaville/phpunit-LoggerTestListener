@@ -10,18 +10,11 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "psr/log": "~1.0",
-        "monolog/monolog": "dev-FilterFeature as 1.10"
+        "psr/log": "~1.0"
     },
     "suggest": {
         "monolog/monolog": "For advanced logging strategies"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/llaville/monolog"
-        }
-    ],    
     "authors": [
         {
             "name": "Laurent Laville",
