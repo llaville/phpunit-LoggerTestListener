@@ -52,11 +52,10 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      * @param mixed                              $channel    The logging channel
      * @param Monolog\Handler\HandlerInterface[] $handlers   Optional stack of handlers
      * @param callable[]                         $processors Optional array of processors
-     * @param callable[]                         $filters    Optional array of filters
      */
     public function __construct(LoggerInterface $logger,
         $channel = 'LoggerTestListener',
-        array $handlers = null, array $processors = null, array $filters = null
+        array $handlers = null, array $processors = null
     ) {
         $this->logger = $logger;
 
@@ -68,13 +67,6 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
             // add some processors
             foreach ($processors as $processor) {
                 $this->logger->pushProcessor($processor);
-            }
-            // add some filters
-            // @link https://github.com/Seldaek/monolog/pull/411
-            foreach ($filters as $filter) {
-                if (method_exists($this->logger, 'pushFilter')) {
-                    $this->logger->pushFilter($filter);
-                }
             }
         }
     }

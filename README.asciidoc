@@ -26,37 +26,14 @@ and used these log levels/events mapping.
 
 == Installation
 
-IMPORTANT: For demonstration purpose, a Growl Handler was used but is not yet available as a GitHub or Packagist version.
-Source code is provided in `extra` folder.
+IMPORTANT: For demonstration purpose, a Growl Handler and an AdvancedFilter Handler were used but are not yet available as a GitHub or Packagist version.
+Source code are provided in `extra` folder.
 
 [source,bash]
 ----
 $ php composer.phar require bartlett/phpunit-loggertestlistener=~1.0
 ----
 
-The monolog version used a https://github.com/Seldaek/monolog/pull/411[filter feature]
-that is not yet included in Monolog distribution.
-
-If you want to have a look on filter capability, add at least in your `composer.json` the following lines :
-
-[source,json]
-----
-    "require": {
-        "monolog/monolog": "dev-FilterFeature as 1.10"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/llaville/monolog"
-        }
-    ]
-----
-
-and update your dependencies
-[source,bash]
-----
-$ php composer.phar update
-----
 
 == Usage with basic PSR-3 Logger
 
@@ -221,6 +198,7 @@ Now create a pre-defined logger with all handlers we wished on and the filter ru
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\GrowlHandler;
+use Monolog\Handler\AdvancedFilterHandler;
 
 class YourMonolog extends Logger
 {
@@ -241,11 +219,14 @@ class YourMonolog extends Logger
         };
 
         $stream = new StreamHandler('/var/logs/monolog.log');
-
         $growl  = new GrowlHandler(array(), Logger::NOTICE);
-        $growl->pushFilter($filter1);
 
-        parent::__construct($name, array($stream, $growl));
+        $filterGrowl = new AdvancedFilterHandler(
+            $growl,
+            array($filter1)
+        );
+
+        parent::__construct($name, array($stream, $filterGrowl));
     }
 }
 ----
@@ -272,12 +253,12 @@ and only important notifications via `GrowlHandler` (see filter rule with callba
 Run the test suite example :
 [source,bash]
 ----
-$ php phpunit-4.2.2.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+$ php phpunit-4.2.6.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
 ----
 
 And you will get something like:
 ----
-PHPUnit 4.2.2 by Sebastian Bergmann.
+PHPUnit 4.2.6 by Sebastian Bergmann.
 
 Configuration read from /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
 
@@ -298,16 +279,16 @@ Tests: 2, Assertions: 2, Failures: 1, Incomplete: 1.
 
 .Test Suite results with Monolog Stream Handler
 ----
-[2014-08-26 10:48:40] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. [] []
-[2014-08-26 10:48:40] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. [] []
-[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testIncomplete' started. [] []
-[2014-08-26 10:48:40] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. [] []
-[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testIncomplete' ended. [] []
-[2014-08-26 10:48:40] PHPUnit.INFO: Test 'testFailure' started. [] []
-[2014-08-26 10:48:40] PHPUnit.ERROR: Test 'testFailure' failed. [] []
-[2014-08-26 10:48:41] PHPUnit.INFO: Test 'testFailure' ended. [] []
-[2014-08-26 10:48:41] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. [] []
-[2014-08-26 10:48:41] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 [] []
+[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. [] []
+[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. [] []
+[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testIncomplete' started. [] []
+[2014-09-17 10:50:23] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. [] []
+[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testIncomplete' ended. [] []
+[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testFailure' started. [] []
+[2014-09-17 10:50:23] PHPUnit.ERROR: Test 'testFailure' failed. [] []
+[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testFailure' ended. [] []
+[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. [] []
+[2014-09-17 10:50:24] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 [] []
 ----
 
 .Test Suite results with Growl Handler

@@ -6,7 +6,8 @@ $vendorDir = $baseDir . '/vendor';
 $loader = require_once $vendorDir . '/autoload.php';
 $loader->addClassMap(
     array(
-        'Monolog\Handler\GrowlHandler'  =>  $vendorDir  . '/bartlett/GrowlHandler.php',
+        'Monolog\Handler\GrowlHandler'          =>  $vendorDir  . '/bartlett/GrowlHandler.php',
+        'Monolog\Handler\AdvancedFilterHandler' =>  $vendorDir  . '/bartlett/AdvancedFilterHandler.php',
     )
 );
 
@@ -50,6 +51,7 @@ class YourLogger extends AbstractLogger
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\GrowlHandler;
+use Monolog\Handler\AdvancedFilterHandler;
 
 class YourMonolog extends Logger
 {
@@ -68,12 +70,15 @@ class YourMonolog extends Logger
                 $record['level'] == $handlerLevel
             );
         };
-        
-        $stream = new StreamHandler('/var/logs/monolog.log');
 
+        $stream = new StreamHandler('/var/logs/monolog.log');
         $growl  = new GrowlHandler(array(), Logger::NOTICE);
-        $growl->pushFilter($filter1);
-        
-        parent::__construct($name, array($stream, $growl));
+
+        $filterGrowl = new AdvancedFilterHandler(
+            $growl,
+            array($filter1)
+        );
+
+        parent::__construct($name, array($stream, $filterGrowl));
     }
 }
