@@ -72,13 +72,23 @@ class YourMonolog extends Logger
         };
 
         $stream = new StreamHandler('/var/logs/monolog.log');
-        $growl  = new GrowlHandler(array(), Logger::NOTICE);
 
-        $filterGrowl = new AdvancedFilterHandler(
-            $growl,
-            array($filter1)
-        );
+        $handlers = array($stream);
 
-        parent::__construct($name, array($stream, $filterGrowl));
+        try {
+            $growl = new GrowlHandler(array(), Logger::NOTICE);
+
+            $filterGrowl = new AdvancedFilterHandler(
+                $growl,
+                array($filter1)
+            );
+            $handlers[] = $filterGrowl;
+
+        } catch (\Exception $e) {
+            // Growl client is probably not started
+            echo $e->getMessage(), PHP_EOL, PHP_EOL;
+        }
+
+        parent::__construct($name, $handlers);
     }
 }
