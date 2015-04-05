@@ -53,9 +53,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      * @param Monolog\Handler\HandlerInterface[] $handlers   Optional stack of handlers
      * @param callable[]                         $processors Optional array of processors
      */
-    public function __construct(LoggerInterface $logger,
+    public function __construct(
+        LoggerInterface $logger,
         $channel = 'LoggerTestListener',
-        array $handlers = null, array $processors = null
+        array $handlers = null,
+        array $processors = null
     ) {
         $this->logger = $logger;
 
@@ -80,9 +82,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      *
      * @return void
      */
-    public function addError(\PHPUnit_Framework_Test $test,
-        \Exception $e, $time)
-    {
+    public function addError(
+        \PHPUnit_Framework_Test $test,
+        \Exception $e,
+        $time
+    ) {
         $this->errors[] = $test->getName();
 
         $this->logger->error(
@@ -99,9 +103,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      *
      * @return void
      */
-    public function addFailure(\PHPUnit_Framework_Test $test,
-        \PHPUnit_Framework_AssertionFailedError $e, $time)
-    {
+    public function addFailure(
+        \PHPUnit_Framework_Test $test,
+        \PHPUnit_Framework_AssertionFailedError $e,
+        $time
+    ) {
         $this->failures[] = $test->getName();
 
         $this->logger->error(
@@ -118,9 +124,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      *
      * @return void
      */
-    public function addIncompleteTest(\PHPUnit_Framework_Test $test,
-        \Exception $e, $time)
-    {
+    public function addIncompleteTest(
+        \PHPUnit_Framework_Test $test,
+        \Exception $e,
+        $time
+    ) {
         $this->incompletes[] = $test->getName();
 
         $this->logger->warning(
@@ -137,9 +145,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      *
      * @return void
      */
-    public function addRiskyTest(\PHPUnit_Framework_Test $test,
-        \Exception $e, $time)
-    {
+    public function addRiskyTest(
+        \PHPUnit_Framework_Test $test,
+        \Exception $e,
+        $time
+    ) {
         $this->risky[] = $test->getName();
 
         $this->logger->warning(
@@ -156,9 +166,11 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      *
      * @return void
      */
-    public function addSkippedTest(\PHPUnit_Framework_Test $test,
-        \Exception $e, $time)
-    {
+    public function addSkippedTest(
+        \PHPUnit_Framework_Test $test,
+        \Exception $e,
+        $time
+    ) {
         $this->skips[] = $test->getName();
 
         $this->suiteSkipped = true;
@@ -231,7 +243,6 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         $this->endedSuites++;
 
         if (count($this->suites) > $this->endedSuites) {
-
             $skipped = $this->suiteSkipped ? ' has been skipped' : '';
 
             $this->logger->notice(
