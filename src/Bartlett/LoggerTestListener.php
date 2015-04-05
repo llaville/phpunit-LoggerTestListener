@@ -349,6 +349,14 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
             $resultMessage .= ", Risky: {$riskyCount}";
         }
 
+        $context['testCount']       = $testCount;
+        $context['assertionCount']  = $this->assertionCount;
+        $context['failureCount']    = $failureCount;
+        $context['errorCount']      = $errorCount;
+        $context['incompleteCount'] = $incompleteCount;
+        $context['skipCount']       = $skipCount;
+        $context['riskyCount']      = $riskyCount;
+
         $this->logger->notice(
             sprintf("TestSuite '%s' ended. %s", $suiteName, $resultMessage),
             $context
