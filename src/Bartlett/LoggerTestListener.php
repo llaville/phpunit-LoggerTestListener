@@ -91,7 +91,7 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         $context  = array(
             'testName'  => $testName,
             'operation' => __FUNCTION__,
-            'error'     => $e->getMessage(),
+            'reason'    => $e->getMessage(),
         );
 
         $this->errors[] = $testName;
@@ -120,7 +120,7 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         $context  = array(
             'testName'  => $testName,
             'operation' => __FUNCTION__,
-            'failure'   => $e->getMessage(),
+            'reason'    => $e->getMessage(),
         );
 
         $this->failures[] = $testName;

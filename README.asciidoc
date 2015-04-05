@@ -295,7 +295,7 @@ Tests: 2, Assertions: 2, Failures: 1, Incomplete: 1.
 [2015-04-05 09:38:43] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. {"testName":"testIncomplete","operation":"addIncompleteTest","reason":"This test has not been implemented yet."} []
 [2015-04-05 09:38:43] PHPUnit.INFO: Test 'testIncomplete' ended. {"testName":"testIncomplete","operation":"endTest"} []
 [2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' started. {"testName":"testFailure","operation":"startTest"} []
-[2015-04-05 09:38:43] PHPUnit.ERROR: Test 'testFailure' failed. {"testName":"testFailure","operation":"addFailure","failure":"Failed asserting that an array is empty."} []
+[2015-04-05 09:38:43] PHPUnit.ERROR: Test 'testFailure' failed. {"testName":"testFailure","operation":"addFailure","reason":"Failed asserting that an array is empty."} []
 [2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' ended. {"testName":"testFailure","operation":"endTest"} []
 [2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. {"suiteName":"Your\\Name_Space\\YourTestSuite","operation":"endTestSuite"} []
 [2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 {"suiteName":"Demo Test Suite","operation":"endTestSuite","testCount":2,"assertionCount":2,"failureCount":1,"errorCount":0,"incompleteCount":1,"skipCount":0,"riskyCount":0} []
