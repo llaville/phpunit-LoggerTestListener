@@ -87,10 +87,18 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         \Exception $e,
         $time
     ) {
-        $this->errors[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+            'error'     => $e->getMessage(),
+        );
+
+        $this->errors[] = $testName;
 
         $this->logger->error(
-            sprintf("Error while running test '%s'.", $test->getName())
+            sprintf("Error while running test '%s'.", $testName),
+            $context
         );
     }
 
@@ -108,10 +116,18 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         \PHPUnit_Framework_AssertionFailedError $e,
         $time
     ) {
-        $this->failures[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+            'failure'   => $e->getMessage(),
+        );
+
+        $this->failures[] = $testName;
 
         $this->logger->error(
-            sprintf("Test '%s' failed.", $test->getName())
+            sprintf("Test '%s' failed.", $testName),
+            $context
         );
     }
 
@@ -129,10 +145,18 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         \Exception $e,
         $time
     ) {
-        $this->incompletes[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+            'reason'    => $e->getMessage(),
+        );
+
+        $this->incompletes[] = $testName;
 
         $this->logger->warning(
-            sprintf("Test '%s' is incomplete.", $test->getName())
+            sprintf("Test '%s' is incomplete.", $testName),
+            $context
         );
     }
 
@@ -150,10 +174,18 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         \Exception $e,
         $time
     ) {
-        $this->risky[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+            'reason'    => $e->getMessage(),
+        );
+
+        $this->risky[] = $testName;
 
         $this->logger->warning(
-            sprintf("Test '%s' is risky.", $test->getName())
+            sprintf("Test '%s' is risky.", $testName),
+            $context
         );
     }
 
@@ -171,12 +203,20 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         \Exception $e,
         $time
     ) {
-        $this->skips[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+            'reason'    => $e->getMessage(),
+        );
+
+        $this->skips[] = $testName;
 
         $this->suiteSkipped = true;
 
         $this->logger->warning(
-            sprintf("Test '%s' has been skipped.", $test->getName())
+            sprintf("Test '%s' has been skipped.", $testName),
+            $context
         );
     }
 
@@ -189,10 +229,17 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      */
     public function startTest(\PHPUnit_Framework_Test $test)
     {
-        $this->tests[] = $test->getName();
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+        );
+
+        $this->tests[] = $testName;
 
         $this->logger->info(
-            sprintf("Test '%s' started.", $test->getName())
+            sprintf("Test '%s' started.", $testName),
+            $context
         );
     }
 
@@ -208,8 +255,15 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
     {
         $this->assertionCount += $test->getNumAssertions();
 
+        $testName = $test->getName();
+        $context  = array(
+            'testName'  => $testName,
+            'operation' => __FUNCTION__,
+        );
+
         $this->logger->info(
-            sprintf("Test '%s' ended.", $test->getName())
+            sprintf("Test '%s' ended.", $testName),
+            $context
         );
     }
 
@@ -222,12 +276,19 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      */
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
-        $this->suites[] = $suite->getName();
+        $suiteName = $suite->getName();
+        $context   = array(
+            'suiteName' => $suiteName,
+            'operation' => __FUNCTION__,
+        );
+
+        $this->suites[] = $suiteName;
 
         $this->suiteSkipped = false;
 
         $this->logger->notice(
-            sprintf("TestSuite '%s' started.", $suite->getName())
+            sprintf("TestSuite '%s' started.", $suiteName),
+            $context
         );
     }
 
@@ -240,13 +301,20 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      */
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
+        $suiteName = $suite->getName();
+        $context   = array(
+            'suiteName' => $suiteName,
+            'operation' => __FUNCTION__,
+        );
+
         $this->endedSuites++;
 
         if (count($this->suites) > $this->endedSuites) {
             $skipped = $this->suiteSkipped ? ' has been skipped' : '';
 
             $this->logger->notice(
-                sprintf("TestSuite '%s' ended%s.", $suite->getName(), $skipped)
+                sprintf("TestSuite '%s' ended%s.", $suiteName, $skipped),
+                $context
             );
             return;
         }
@@ -282,7 +350,8 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         }
 
         $this->logger->notice(
-            sprintf("TestSuite '%s' ended. %s", $suite->getName(), $resultMessage)
+            sprintf("TestSuite '%s' ended. %s", $suiteName, $resultMessage),
+            $context
         );
     }
 }

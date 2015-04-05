@@ -263,18 +263,18 @@ and only important notifications via `GrowlHandler` (see filter rule with callba
 Run the test suite example :
 [source,bash]
 ----
-$ php phpunit-4.2.6.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+$ php phpunit-4.5.1.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
 ----
 
 And you will get something like:
 ----
-PHPUnit 4.2.6 by Sebastian Bergmann.
+PHPUnit 4.5.1 by Sebastian Bergmann and contributors.
 
 Configuration read from /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
 
 IF
 
-Time: 908 ms, Memory: 5.25Mb
+Time: 1.1 seconds, Memory: 4.00Mb
 
 There was 1 failure:
 
@@ -289,16 +289,16 @@ Tests: 2, Assertions: 2, Failures: 1, Incomplete: 1.
 
 .Test Suite results with Monolog Stream Handler
 ----
-[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. [] []
-[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. [] []
-[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testIncomplete' started. [] []
-[2014-09-17 10:50:23] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. [] []
-[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testIncomplete' ended. [] []
-[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testFailure' started. [] []
-[2014-09-17 10:50:23] PHPUnit.ERROR: Test 'testFailure' failed. [] []
-[2014-09-17 10:50:23] PHPUnit.INFO: Test 'testFailure' ended. [] []
-[2014-09-17 10:50:23] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. [] []
-[2014-09-17 10:50:24] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 [] []
+[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. {"suiteName":"Demo Test Suite","operation":"startTestSuite"} []
+[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. {"suiteName":"Your\\Name_Space\\YourTestSuite","operation":"startTestSuite"} []
+[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testIncomplete' started. {"testName":"testIncomplete","operation":"startTest"} []
+[2015-04-05 09:38:43] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. {"testName":"testIncomplete","operation":"addIncompleteTest","reason":"This test has not been implemented yet."} []
+[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testIncomplete' ended. {"testName":"testIncomplete","operation":"endTest"} []
+[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' started. {"testName":"testFailure","operation":"startTest"} []
+[2015-04-05 09:38:43] PHPUnit.ERROR: Test 'testFailure' failed. {"testName":"testFailure","operation":"addFailure","failure":"Failed asserting that an array is empty."} []
+[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' ended. {"testName":"testFailure","operation":"endTest"} []
+[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. {"suiteName":"Your\\Name_Space\\YourTestSuite","operation":"endTestSuite"} []
+[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 {"suiteName":"Demo Test Suite","operation":"endTestSuite"} []
 ----
 
 .Test Suite results with Growl Handler
