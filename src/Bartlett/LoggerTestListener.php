@@ -253,7 +253,9 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      */
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        $this->assertionCount += $test->getNumAssertions();
+        if ($test instanceof \PHPUnit_Framework_TestCase) {
+            $this->assertionCount += $test->getNumAssertions();
+        }
 
         $testName = $test->getName();
         $context  = array(
@@ -301,10 +303,24 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
      */
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
+        $testCount       = count($this->tests);
+        $failureCount    = count($this->failures);
+        $errorCount      = count($this->errors);
+        $incompleteCount = count($this->incompletes);
+        $skipCount       = count($this->skips);
+        $riskyCount      = count($this->risky);
+
         $suiteName = $suite->getName();
         $context   = array(
-            'suiteName' => $suiteName,
-            'operation' => __FUNCTION__,
+            'suiteName'       => $suiteName,
+            'operation'       => __FUNCTION__,
+            'testCount'       => $testCount,
+            'assertionCount'  => $this->assertionCount,
+            'failureCount'    => $failureCount,
+            'errorCount'      => $errorCount,
+            'incompleteCount' => $incompleteCount,
+            'skipCount'       => $skipCount,
+            'riskyCount'      => $riskyCount,
         );
 
         $this->endedSuites++;
@@ -318,13 +334,6 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
             );
             return;
         }
-
-        $testCount       = count($this->tests);
-        $failureCount    = count($this->failures);
-        $errorCount      = count($this->errors);
-        $incompleteCount = count($this->incompletes);
-        $skipCount       = count($this->skips);
-        $riskyCount      = count($this->risky);
 
         $resultMessage  = "Tests: {$testCount}, ";
         $resultMessage .= "Assertions: {$this->assertionCount}";
@@ -348,14 +357,6 @@ class LoggerTestListener implements \PHPUnit_Framework_TestListener
         if ($riskyCount > 0) {
             $resultMessage .= ", Risky: {$riskyCount}";
         }
-
-        $context['testCount']       = $testCount;
-        $context['assertionCount']  = $this->assertionCount;
-        $context['failureCount']    = $failureCount;
-        $context['errorCount']      = $errorCount;
-        $context['incompleteCount'] = $incompleteCount;
-        $context['skipCount']       = $skipCount;
-        $context['riskyCount']      = $riskyCount;
 
         $this->logger->notice(
             sprintf("TestSuite '%s' ended. %s", $suiteName, $resultMessage),
