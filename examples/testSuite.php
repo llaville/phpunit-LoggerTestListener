@@ -33,4 +33,22 @@ class YourTestSuite extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(TRUE, 'This should always work.');
     }
+
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testDataProvider($a, $b, $expected)
+    {
+        $this->assertEquals($expected, $a + $b);
+    }
+
+    public function additionProvider()
+    {
+        return array(
+            array(0, 0, 0),
+            array(0, 1, 1),
+            array(1, 0, 1),
+            array(1, 1, 3)
+        );
+    }
 }
