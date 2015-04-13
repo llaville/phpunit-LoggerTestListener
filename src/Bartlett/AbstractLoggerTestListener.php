@@ -188,6 +188,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
         $context  = array(
             'testName'  => $testName,
             'operation' => __FUNCTION__,
+            'test'      => $test,
         );
 
         $this->logger->info(
