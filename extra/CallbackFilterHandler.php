@@ -10,11 +10,8 @@ use Monolog\Handler\HandlerInterface;
  *
  * @author Christophe Coevoet
  * @author Laurent Laville <pear@laurent-laville.org>
- * @link   https://github.com/Seldaek/monolog/pull/411#issuecomment-53413159
- *
- * Superseded by CallbackFilterHandler. See https://github.com/Seldaek/monolog/issues/423
  */
-class AdvancedFilterHandler extends AbstractHandler
+class CallbackFilterHandler extends AbstractHandler
 {
     /**
      * Handler or factory callable($record, $this)
@@ -45,25 +42,28 @@ class AdvancedFilterHandler extends AbstractHandler
     public function __construct($handler, array $filters, $bubble = true)
     {
         $this->handler = $handler;
-        $this->filters = $filters;
         $this->bubble  = $bubble;
-    }
+        $this->filters = array();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isHandling(array $record)
-    {
-        foreach ($this->filters as $filter) {
-            if (!call_user_func($filter, $record, $this->handler->getLevel())) {
-                return false;
+        if (!$this->handler instanceof HandlerInterface) {
+            if (!is_callable($this->handler)) {
+                throw new \RuntimeException(
+                    "The given handler (" . json_encode($this->handler)
+                    . ") is not a callable nor a Monolog\\Handler\\HandlerInterface object"
+                );
             }
         }
 
-        return true;
+        foreach ($filters as $filter) {
+            if (!is_callable($filter)) {
+                throw new \RuntimeException(
+                    "The given filter (" . json_encode($filter)
+                    . ") is not a callable object"
+                );
+            }
+            $this->filters[] = $filter;
+        }
     }
-
-    // The following methods are copied from FilterHandler
 
     /**
      * {@inheritdoc}
@@ -73,15 +73,14 @@ class AdvancedFilterHandler extends AbstractHandler
         if (!$this->isHandling($record)) {
             return false;
         }
+        foreach ($this->filters as $filter) {
+            if (!call_user_func($filter, $record, $this->handler->getLevel())) {
+                return false;
+            }
+        }
 
         // The same logic as in FingersCrossedHandler
         if (!$this->handler instanceof HandlerInterface) {
-            if (!is_callable($this->handler)) {
-                throw new \RuntimeException(
-                    "The given handler (" . json_encode($this->handler)
-                    . ") is not a callable nor a Monolog\\Handler\\HandlerInterface object"
-                );
-            }
             $this->handler = call_user_func($this->handler, $record, $this);
             if (!$this->handler instanceof HandlerInterface) {
                 throw new \RuntimeException("The factory callable should return a HandlerInterface");

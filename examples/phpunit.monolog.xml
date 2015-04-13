@@ -2,14 +2,14 @@
 <phpunit 
     backupGlobals="true"
     backupStaticAttributes="false"
-    bootstrap="bootstrap.php"
+    bootstrap="bootstrap.monolog.php"
     colors="false"
     stopOnError="false"
     stopOnFailure="false"
     stopOnIncomplete="false"
     stopOnRisky="false"
     stopOnSkipped="false"
-    strict="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
     verbose="false"
 >
     <listeners>
