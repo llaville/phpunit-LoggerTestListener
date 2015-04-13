@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    backupGlobals="true"
+    backupStaticAttributes="false"
+    bootstrap="bootstrap.psr3.php"
+    colors="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnRisky="false"
+    stopOnSkipped="false"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    verbose="false"
+>
+    <listeners>
+        <listener class="Bartlett\LoggerTestListener">
+            <arguments>
+                <object class="YourPsr3Logger">
+                    <arguments>
+                        <string>YourCustomChannel</string>
+                        <string>debug</string>
+                    </arguments>
+                </object>
+            </arguments>
+        </listener>
+    </listeners>
+    <testsuites>
+        <testsuite name="Demo Test Suite">
+            <file>testSuite.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
