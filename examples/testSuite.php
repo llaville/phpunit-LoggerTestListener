@@ -14,9 +14,18 @@ class YourTestSuite extends \PHPUnit_Framework_TestCase
           'This test has not been implemented yet.'
         );
     }
-    
+
+    public function testRisky()
+    {
+    }
+
+    public function testSkipped()
+    {
+        $this->markTestSkipped('This test was skipped for any reason.');
+    }
+
     public function testFailure()
     {
         $this->assertEmpty(array('foo'));
-    }    
+    }
 }
