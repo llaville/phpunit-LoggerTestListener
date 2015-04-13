@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    backupGlobals="true"
+    backupStaticAttributes="false"
+    bootstrap="bootstrap.printer.php"
+    colors="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnRisky="false"
+    stopOnSkipped="false"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    verbose="false"
+    printerClass="ResultPrinter"
+>
+    <testsuites>
+        <testsuite name="Demo Test Suite">
+            <file>testSuite.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
