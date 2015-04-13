@@ -28,4 +28,9 @@ class YourTestSuite extends \PHPUnit_Framework_TestCase
     {
         $this->assertEmpty(array('foo'));
     }
+
+    public function testPass()
+    {
+        $this->assertTrue(TRUE, 'This should always work.');
+    }
 }
