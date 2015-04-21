@@ -13,10 +13,12 @@
         "psr/log": "~1.0"
     },
     "require-dev": {
-        "monolog/monolog": "~1.10"
+        "monolog/monolog": "~1.10",
+        "bartlett/monolog-callbackfilterhandler": "~1.0"
     },
     "suggest": {
-        "monolog/monolog": "For advanced logging strategies"
+        "monolog/monolog": "For advanced logging strategies",
+        "bartlett/monolog-callbackfilterhandler": "Advanced filtering strategies for Monolog"
     },
     "authors": [
         {
