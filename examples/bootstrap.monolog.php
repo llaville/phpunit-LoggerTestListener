@@ -20,7 +20,7 @@ use Bartlett\Monolog\Handler\CallbackFilterHandler;
 
 class YourMonolog extends Logger
 {
-    public function __construct($name = 'PHPUnit')
+    public function __construct($name = 'PHPUnit', $level = 'debug')
     {
         /**
          * Filter growl notifications and send only
@@ -36,7 +36,11 @@ class YourMonolog extends Logger
             }
         );
 
-        $stream = new RotatingFileHandler(__DIR__ . DIRECTORY_SEPARATOR . 'monologTestListener.log');
+        $stream = new RotatingFileHandler(
+            __DIR__ . DIRECTORY_SEPARATOR . 'monologTestListener.log',
+            0, // maximal amount of files to keep (0 means unlimited)
+            Logger::toMonologLevel($level)
+        );
         $stream->setFilenameFormat('{filename}-{date}', 'Ymd');
 
         $handlers = array($stream);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
+<phpunit
     backupGlobals="true"
     backupStaticAttributes="false"
     bootstrap="bootstrap.monolog.php"
@@ -15,13 +15,18 @@
     <listeners>
         <listener class="Bartlett\LoggerTestListener">
             <arguments>
-                <object class="YourMonolog" />
-            </arguments>  
+                <object class="YourMonolog">
+                    <arguments>
+                        <string>PHPUnit</string>
+                        <string>debug</string>
+                    </arguments>
+                </object>
+            </arguments>
         </listener>
     </listeners>
     <testsuites>
         <testsuite name="Demo Test Suite">
             <file>testSuite.php</file>
         </testsuite>
-    </testsuites>    
+    </testsuites>
 </phpunit>
