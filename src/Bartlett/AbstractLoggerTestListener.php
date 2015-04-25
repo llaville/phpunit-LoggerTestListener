@@ -341,7 +341,12 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
         }
 
         if (null !== $this->result) {
-            $this->printResult();
+            list ($resultMessage, $context) = $this->printResult();
+
+            $this->logger->notice(
+                $resultMessage,
+                $context
+            );
         }
     }
 
@@ -356,7 +361,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
     /**
      * Prints final results when all tests ended.
      *
-     * @return void
+     * @return array
      */
     protected function printResult()
     {
@@ -403,9 +408,6 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'riskyCount'      => $riskyCount,
         );
 
-        $this->logger->notice(
-            $resultMessage,
-            $context
-        );
+        return array($resultMessage, $context);
     }
 }

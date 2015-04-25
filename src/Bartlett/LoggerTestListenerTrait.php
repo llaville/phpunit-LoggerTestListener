@@ -342,7 +342,12 @@ trait LoggerTestListenerTrait
         }
 
         if (null !== $this->result) {
-            $this->printResult();
+            list ($resultMessage, $context) = $this->printResult();
+
+            $this->logger->notice(
+                $resultMessage,
+                $context
+            );
         }
     }
 
@@ -357,7 +362,7 @@ trait LoggerTestListenerTrait
     /**
      * Prints final results when all tests ended.
      *
-     * @return void
+     * @return array
      */
     protected function printResult()
     {
@@ -404,9 +409,6 @@ trait LoggerTestListenerTrait
             'riskyCount'      => $riskyCount,
         );
 
-        $this->logger->notice(
-            $resultMessage,
-            $context
-        );
+        return array($resultMessage, $context);
     }
 }
