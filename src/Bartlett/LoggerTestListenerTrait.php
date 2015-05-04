@@ -29,15 +29,8 @@ trait LoggerTestListenerTrait
      * Results
      */
     protected $stats = array();
-    protected $numAssertions = 0;
     protected $suites = array();
     protected $endedSuites = 0;
-    protected $suiteSkipped;
-
-    /**
-     * @var \PHPUnit_Framework_TestResult
-     */
-    private $result;
 
     /**
      * An error occurred.
@@ -55,9 +48,11 @@ trait LoggerTestListenerTrait
     ) {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'reason'    => $e->getMessage(),
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
+            'reason'             => $e->getMessage(),
         );
 
         $this->logger->error(
@@ -82,9 +77,11 @@ trait LoggerTestListenerTrait
     ) {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'reason'    => $e->getMessage(),
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
+            'reason'             => $e->getMessage(),
         );
 
         $this->logger->error(
@@ -109,9 +106,11 @@ trait LoggerTestListenerTrait
     ) {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'reason'    => $e->getMessage(),
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
+            'reason'             => $e->getMessage(),
         );
 
         $this->logger->warning(
@@ -136,9 +135,11 @@ trait LoggerTestListenerTrait
     ) {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'reason'    => $e->getMessage(),
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
+            'reason'             => $e->getMessage(),
         );
 
         $this->logger->warning(
@@ -163,12 +164,12 @@ trait LoggerTestListenerTrait
     ) {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'reason'    => $e->getMessage(),
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
+            'reason'             => $e->getMessage(),
         );
-
-        $this->suiteSkipped = true;
 
         $this->logger->warning(
             sprintf("Test '%s' has been skipped.", $testName),
@@ -187,9 +188,10 @@ trait LoggerTestListenerTrait
     {
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
-            'test'      => $test,
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
         );
 
         $this->logger->info(
@@ -212,35 +214,39 @@ trait LoggerTestListenerTrait
             $assertionCount       = $test->getNumAssertions();
             $this->numAssertions += $assertionCount;
 
+            if ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
+                $status = 'failures';
+            } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+                $status = 'errors';
+            } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+                $status = 'incompletes';
+            } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+                $status = 'skips';
+            } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_RISKY) {
+                $status = 'risky';
+            } else {
+                $status = 'tests';
+            }
+
             if (count($this->suites) - $this->endedSuites > 1) {
                 $suiteName = end($this->suites);
 
-                if ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
-                    $this->stats[$suiteName]['failures']++;
-
-                } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
-                    $this->stats[$suiteName]['errors'] ++;
-
-                } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
-                    $this->stats[$suiteName]['incompletes']++;
-
-                } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
-                    $this->stats[$suiteName]['skips']++;
-
-                } elseif ($test->getStatus() == \PHPUnit_Runner_BaseTestRunner::STATUS_RISKY) {
-                    $this->stats[$suiteName]['risky']++;
-                }
-
-                $this->stats[$suiteName]['assertions']  += $assertionCount;
+                $this->stats[$suiteName][$status]++;
+                $this->stats[$suiteName]['assertions'] += $assertionCount;
             }
 
-            $this->result = $test->getTestResultObject();
+            // updates also top test suite
+            $suiteName = reset($this->suites);
+            $this->stats[$suiteName][$status]++;
+            $this->stats[$suiteName]['assertions'] += $assertionCount;
         }
 
         $testName = $test->getName();
         $context  = array(
-            'testName'  => $testName,
-            'operation' => __FUNCTION__,
+            'testName'           => $testName,
+            'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
+            'testDescriptionStr' => $test->toString(),
+            'operation'          => __FUNCTION__,
         );
 
         if (isset($assertionCount)) {
@@ -263,15 +269,17 @@ trait LoggerTestListenerTrait
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
         $suiteName = $suite->getName();
+        $testCount = $suite->count();
         $context   = array(
             'suiteName' => $suiteName,
+            'testCount' => $testCount,
             'operation' => __FUNCTION__,
         );
 
         $this->suites[] = $suiteName;
 
         $this->stats[$suiteName] = array(
-            'tests'       => $suite->count(),
+            'tests'       => 0,
             'assertions'  => 0,
             'failures'    => 0,
             'errors'      => 0,
@@ -280,10 +288,8 @@ trait LoggerTestListenerTrait
             'risky'       => 0,
         );
 
-        $this->suiteSkipped = false;
-
         $this->logger->notice(
-            sprintf("TestSuite '%s' started.", $suiteName),
+            sprintf("TestSuite '%s' started with %d tests.", $suiteName, $testCount),
             $context
         );
     }
@@ -301,54 +307,22 @@ trait LoggerTestListenerTrait
 
         $suiteName = $suite->getName();
 
-        if (count($this->suites) > $this->endedSuites) {
-            $context   = array(
-                'testCount'       => $this->stats[$suiteName]['tests'],
-                'assertionCount'  => $this->stats[$suiteName]['assertions'],
-                'failureCount'    => $this->stats[$suiteName]['failures'],
-                'errorCount'      => $this->stats[$suiteName]['errors'],
-                'incompleteCount' => $this->stats[$suiteName]['incompletes'],
-                'skipCount'       => $this->stats[$suiteName]['skips'],
-                'riskyCount'      => $this->stats[$suiteName]['risky'],
-            );
-        } else {
-            $context   = array(
-                'testCount'       => $this->result->count(),
-                'assertionCount'  => $this->numAssertions,
-                'failureCount'    => $this->result->failureCount(),
-                'errorCount'      => $this->result->errorCount(),
-                'incompleteCount' => $this->result->notImplementedCount(),
-                'skipCount'       => $this->result->skippedCount(),
-                'riskyCount'      => $this->result->riskyCount(),
-            );
-        }
-        $context = array_merge(
-            array(
-                'suiteName'       => $suiteName,
-                'operation'       => __FUNCTION__,
-            ),
-            $context
+        $context   = array(
+            'suiteName'       => $suiteName,
+            'testCount'       => $this->stats[$suiteName]['tests'],
+            'assertionCount'  => $this->stats[$suiteName]['assertions'],
+            'failureCount'    => $this->stats[$suiteName]['failures'],
+            'errorCount'      => $this->stats[$suiteName]['errors'],
+            'incompleteCount' => $this->stats[$suiteName]['incompletes'],
+            'skipCount'       => $this->stats[$suiteName]['skips'],
+            'riskyCount'      => $this->stats[$suiteName]['risky'],
+            'operation'       => __FUNCTION__,
         );
-
-        $skipped = $this->suiteSkipped ? ' has been skipped' : '';
 
         $this->logger->notice(
-            sprintf("TestSuite '%s' ended%s.", $suiteName, $skipped),
+            sprintf("TestSuite '%s' ended.", $suiteName),
             $context
         );
-
-        if (count($this->suites) > $this->endedSuites) {
-            return;
-        }
-
-        if (null !== $this->result) {
-            list ($resultMessage, $context) = $this->printResult();
-
-            $this->logger->notice(
-                $resultMessage,
-                $context
-            );
-        }
     }
 
     /**
@@ -362,44 +336,36 @@ trait LoggerTestListenerTrait
     /**
      * Prints final results when all tests ended.
      *
-     * @return array
+     * PHPUnit_TextUI_ResultPrinter compatible
+     *
+     * @return void
      */
-    protected function printResult()
+    public function printFooter(\PHPUnit_Framework_TestResult $result)
     {
-        $testCount       = $this->result->count();
+        $testCount       = $result->count();
         $assertionCount  = $this->numAssertions;
-        $failureCount    = $this->result->failureCount();
-        $errorCount      = $this->result->errorCount();
-        $incompleteCount = $this->result->notImplementedCount();
-        $skipCount       = $this->result->skippedCount();
-        $riskyCount      = $this->result->riskyCount();
+        $failureCount    = $result->failureCount();
+        $errorCount      = $result->errorCount();
+        $incompleteCount = $result->notImplementedCount();
+        $skipCount       = $result->skippedCount();
+        $riskyCount      = $result->riskyCount();
 
-        $resultMessage  = sprintf('Results %s. ', ($errorCount + $failureCount ? 'KO' : 'OK'));
-        $resultMessage .= "Tests: {$testCount}, ";
-        $resultMessage .= "Assertions: {$assertionCount}";
-
-        if ($failureCount > 0) {
-            $resultMessage .= ", Failures: {$failureCount}";
-        }
-
-        if ($errorCount > 0) {
-            $resultMessage .= ", Errors: {$errorCount}";
-        }
-
-        if ($incompleteCount > 0) {
-            $resultMessage .= ", Incomplete: {$incompleteCount}";
-        }
-
-        if ($skipCount > 0) {
-            $resultMessage .= ", Skipped: {$skipCount}";
-        }
-
-        if ($riskyCount > 0) {
-            $resultMessage .= ", Risky: {$riskyCount}";
-        }
+        $resultStatus   = ($errorCount + $failureCount) ? 'KO' : 'OK';
+        $resultMessage  = sprintf('Results %s. ', $resultStatus) .
+            $this->formatCounters(
+                $testCount,
+                $assertionCount,
+                $failureCount,
+                $errorCount,
+                $incompleteCount,
+                $skipCount,
+                $riskyCount
+            )
+        ;
 
         $context = array(
             'operation'       => __FUNCTION__,
+            'status'          => $resultStatus,
             'testCount'       => $testCount,
             'assertionCount'  => $assertionCount,
             'failureCount'    => $failureCount,
@@ -409,6 +375,41 @@ trait LoggerTestListenerTrait
             'riskyCount'      => $riskyCount,
         );
 
-        return array($resultMessage, $context);
+        $this->logger->notice($resultMessage, $context);
+    }
+
+    protected function formatCounters(
+        $testCount,
+        $assertionCount,
+        $failureCount,
+        $errorCount,
+        $incompleteCount,
+        $skipCount,
+        $riskyCount
+    ) {
+        $resultMessage  = "Tests: $testCount, ";
+        $resultMessage .= "Assertions: $assertionCount";
+
+        if ($failureCount > 0) {
+            $resultMessage .= ", Failures: $failureCount";
+        }
+
+        if ($errorCount > 0) {
+            $resultMessage .= ", Errors: $errorCount";
+        }
+
+        if ($incompleteCount > 0) {
+            $resultMessage .= ", Incomplete: $incompleteCount";
+        }
+
+        if ($skipCount > 0) {
+            $resultMessage .= ", Skipped: $skipCount";
+        }
+
+        if ($riskyCount > 0) {
+            $resultMessage .= ", Risky: $riskyCount";
+        }
+
+        return $resultMessage;
     }
 }
