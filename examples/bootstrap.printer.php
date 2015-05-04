@@ -81,16 +81,6 @@ class Psr3ConsoleLogger extends AbstractLogger
             return;
         }
 
-        if ($this->level == 100  // DEBUG
-            && isset($context['operation'])
-            && 'startTest' == $context['operation']
-        ) {
-            $describe = PHPUnit_Util_Test::describe($context['test']);
-            $pos      = strpos($describe, $context['testName']);
-            $describe = substr($describe, $pos);
-            $message  = str_replace($context['testName'], $describe, $message);
-        }
-
         echo
             sprintf(
                 '%s - %s',
@@ -105,6 +95,8 @@ class Psr3ConsoleLogger extends AbstractLogger
 class ResultPrinter extends \PHPUnit_Util_Printer implements \PHPUnit_Framework_TestListener
 {
     use LoggerTestListenerTrait, LoggerAwareTrait, GetOpt;
+
+    protected $numAssertions = 0;
 
     /**
      * {@inheritDoc}
