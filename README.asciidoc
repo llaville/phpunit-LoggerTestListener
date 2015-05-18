@@ -199,8 +199,9 @@ Now create a pre-defined logger with all handlers we wished on and the filter ru
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\GrowlHandler;
-use Monolog\Handler\AdvancedFilterHandler;
+
+use Bartlett\Monolog\Handler\GrowlHandler;
+use Bartlett\Monolog\Handler\CallbackFilterHandler;
 
 class YourMonolog extends Logger
 {
@@ -227,7 +228,7 @@ class YourMonolog extends Logger
         try {
             $growl = new GrowlHandler(array(), Logger::NOTICE);
 
-            $filterGrowl = new AdvancedFilterHandler(
+            $filterGrowl = new CallbackFilterHandler(
                 $growl,
                 array($filter1)
             );
