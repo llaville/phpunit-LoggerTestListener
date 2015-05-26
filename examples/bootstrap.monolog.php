@@ -2,20 +2,13 @@
 
 $baseDir   = dirname(__DIR__);
 $vendorDir = $baseDir . '/vendor';
-$extraDir  = $baseDir . '/extra';
 
-$loader = require_once $vendorDir . '/autoload.php';
-$loader->addClassMap(
-    array(
-        'Monolog\Handler\GrowlHandler'          =>  $extraDir  . '/GrowlHandler.php',
-    )
-);
+require_once $vendorDir . '/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;
-// not yet part of Monolog distribution
-use Monolog\Handler\GrowlHandler;
 
+use Bartlett\Monolog\Handler\GrowlHandler;
 use Bartlett\Monolog\Handler\CallbackFilterHandler;
 
 class YourMonolog extends Logger
