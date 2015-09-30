@@ -53,6 +53,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
+            'trace'              => \PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
         );
 
         $this->logger->error(
@@ -82,6 +83,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
+            'trace'              => \PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
         );
 
         $this->logger->error(
@@ -111,6 +113,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
+            'trace'              => \PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
         );
 
         $this->logger->warning(
@@ -140,6 +143,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
+            'trace'              => \PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
         );
 
         $this->logger->warning(
@@ -169,6 +173,7 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
+            'trace'              => \PHPUnit_Util_Filter::getFilteredStacktrace($e, false),
         );
 
         $this->logger->warning(
@@ -241,12 +246,19 @@ abstract class AbstractLoggerTestListener implements \PHPUnit_Framework_TestList
             $this->stats[$suiteName]['assertions'] += $assertionCount;
         }
 
+        if (method_exists($test, 'hasOutput') && $test->hasOutput()) {
+            $output = $test->getActualOutput();
+        } else {
+            $output = '';
+        }
+
         $testName = $test->getName();
         $context  = array(
             'testName'           => $testName,
             'testDescriptionArr' => \PHPUnit_Util_Test::describe($test, false),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
+            'output'             => $output,
         );
 
         if (isset($assertionCount)) {
