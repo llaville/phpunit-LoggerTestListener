@@ -31,7 +31,7 @@ Source code are provided in `extra` folder.
 
 [source,bash]
 ----
-$ php composer.phar require bartlett/phpunit-loggertestlistener=~1.1
+$ php composer.phar require bartlett/phpunit-loggertestlistener
 ----
 
 
@@ -190,6 +190,8 @@ to receive all log records, but just the most important ones (errors, failures, 
 
 Actually Monolog can't do this.
 So this is the reason of the https://github.com/Seldaek/monolog/pull/411[Pull Request] to add filter capability.
+It's now available as a standalone package. See https://github.com/Seldaek/monolog/wiki/Third-Party-Packages[Monolog Wiki] page,
+and https://github.com/llaville/monolog-callbackfilterhandler[CallbackFilterHandler] project's page
 
 Now create a pre-defined logger with all handlers we wished on and the filter rules for each handlers.
 
@@ -266,42 +268,64 @@ and only important notifications via `GrowlHandler` (see filter rule with callba
 Run the test suite example :
 [source,bash]
 ----
-$ php phpunit-4.5.1.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+$ php phpunit-4.8.7.phar -c /home/github/phpunit-LoggerTestListener/examples/phpunit.monolog.xml
 ----
 
 And you will get something like:
 ----
-PHPUnit 4.5.1 by Sebastian Bergmann and contributors.
+PHPUnit 4.8.7 by Sebastian Bergmann and contributors.
 
-Configuration read from /home/github/phpunit-LoggerTestListener/examples/phpunit.xml
+IRSF....F
 
-IF
+Time: 1.15 seconds, Memory: 8.75Mb
 
-Time: 1.1 seconds, Memory: 4.00Mb
-
-There was 1 failure:
+There were 2 failures:
 
 1) Your\Name_Space\YourTestSuite::testFailure
 Failed asserting that an array is empty.
 
-/home/github/phpunit-LoggerTestListener/examples/testSuite.php:20
+/home/github/phpunit-LoggerTestListener/examples/testSuite.php:29
+
+2) Your\Name_Space\YourTestSuite::testDataProvider with data set #3 (1, 1, 3)
+Failed asserting that 2 matches expected 3.
+
+/home/github/phpunit-LoggerTestListener/examples/testSuite.php:42
 
 FAILURES!
-Tests: 2, Assertions: 2, Failures: 1, Incomplete: 1.
+Tests: 9, Assertions: 7, Failures: 2, Skipped: 1, Incomplete: 1, Risky: 1.
 ----
 
 .Test Suite results with Monolog Stream Handler
 ----
-[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started. {"suiteName":"Demo Test Suite","operation":"startTestSuite"} []
-[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started. {"suiteName":"Your\\Name_Space\\YourTestSuite","operation":"startTestSuite"} []
-[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testIncomplete' started. {"testName":"testIncomplete","operation":"startTest"} []
-[2015-04-05 09:38:43] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. {"testName":"testIncomplete","operation":"addIncompleteTest","reason":"This test has not been implemented yet."} []
-[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testIncomplete' ended. {"testName":"testIncomplete","operation":"endTest"} []
-[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' started. {"testName":"testFailure","operation":"startTest"} []
-[2015-04-05 09:38:43] PHPUnit.ERROR: Test 'testFailure' failed. {"testName":"testFailure","operation":"addFailure","reason":"Failed asserting that an array is empty."} []
-[2015-04-05 09:38:43] PHPUnit.INFO: Test 'testFailure' ended. {"testName":"testFailure","operation":"endTest"} []
-[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. {"suiteName":"Your\\Name_Space\\YourTestSuite","operation":"endTestSuite","testCount":2,"assertionCount":2,"failureCount":1,"errorCount":0,"incompleteCount":1,"skipCount":0,"riskyCount":0} []
-[2015-04-05 09:38:43] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. Tests: 2, Assertions: 2, Failures: 1, Incompleted: 1 {"suiteName":"Demo Test Suite","operation":"endTestSuite","testCount":2,"assertionCount":2,"failureCount":1,"errorCount":0,"incompleteCount":1,"skipCount":0,"riskyCount":0} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started with 9 tests. {"suiteName":"Demo Test Suite","testCount":9,"operation":"startTestSuite"} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started with 9 tests. {"suiteName":"Your\\Name_Space\\YourTestSuite","testCount":9,"operation":"startTestSuite"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testIncomplete' started. {"testName":"testIncomplete","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testIncomplete"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testIncomplete","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.WARNING: Test 'testIncomplete' is incomplete. {"testName":"testIncomplete","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testIncomplete"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testIncomplete","operation":"addIncompleteTest","reason":"This test has not been implemented yet.","trace":[{"file":"C:\\home\\github\\phpunit-LoggerTestListener\\examples\\testSuite.php","line":15,"function":"markTestIncomplete","class":"PHPUnit_Framework_Assert","type":"::"}]} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testIncomplete' ended. {"testName":"testIncomplete","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testIncomplete"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testIncomplete","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testRisky' started. {"testName":"testRisky","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testRisky"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testRisky","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.WARNING: Test 'testRisky' is risky. {"testName":"testRisky","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testRisky"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testRisky","operation":"addRiskyTest","reason":"This test did not perform any assertions","trace":[]} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testRisky' ended. {"testName":"testRisky","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testRisky"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testRisky","operation":"endTest","output":"","assertionCount":0} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testSkipped' started. {"testName":"testSkipped","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testSkipped"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testSkipped","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.WARNING: Test 'testSkipped' has been skipped. {"testName":"testSkipped","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testSkipped"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testSkipped","operation":"addSkippedTest","reason":"This test was skipped for any reason.","trace":[{"file":"C:\\home\\github\\phpunit-LoggerTestListener\\examples\\testSuite.php","line":24,"function":"markTestSkipped","class":"PHPUnit_Framework_Assert","type":"::"}]} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testSkipped' ended. {"testName":"testSkipped","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testSkipped"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testSkipped","operation":"endTest","output":"","assertionCount":0} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testFailure' started. {"testName":"testFailure","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testFailure"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testFailure","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.ERROR: Test 'testFailure' failed. {"testName":"testFailure","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testFailure"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testFailure","operation":"addFailure","reason":"Failed asserting that an array is empty.","trace":[{"file":"C:\\home\\github\\phpunit-LoggerTestListener\\examples\\testSuite.php","line":29,"function":"assertEmpty","class":"PHPUnit_Framework_Assert","type":"::"}]} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testFailure' ended. {"testName":"testFailure","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testFailure"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testFailure","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testPass' started. {"testName":"testPass","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testPass"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testPass","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testPass' ended. {"testName":"testPass","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testPass"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testPass","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite::testDataProvider' started with 4 tests. {"suiteName":"Your\\Name_Space\\YourTestSuite::testDataProvider","testCount":4,"operation":"startTestSuite"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #0' started. {"testName":"testDataProvider with data set #0","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #0"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #0 (0, 0, 0)","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #0' ended. {"testName":"testDataProvider with data set #0","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #0"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #0 (0, 0, 0)","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #1' started. {"testName":"testDataProvider with data set #1","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #1"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #1 (0, 1, 1)","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #1' ended. {"testName":"testDataProvider with data set #1","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #1"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #1 (0, 1, 1)","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #2' started. {"testName":"testDataProvider with data set #2","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #2"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #2 (1, 0, 1)","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #2' ended. {"testName":"testDataProvider with data set #2","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #2"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #2 (1, 0, 1)","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #3' started. {"testName":"testDataProvider with data set #3","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #3"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #3 (1, 1, 3)","operation":"startTest"} []
+[2015-09-30 18:42:26] PHPUnit.ERROR: Test 'testDataProvider with data set #3' failed. {"testName":"testDataProvider with data set #3","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #3"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #3 (1, 1, 3)","operation":"addFailure","reason":"Failed asserting that 2 matches expected 3.","trace":[{"file":"C:\\home\\github\\phpunit-LoggerTestListener\\examples\\testSuite.php","line":42,"function":"assertEquals","class":"PHPUnit_Framework_Assert","type":"::"}]} []
+[2015-09-30 18:42:26] PHPUnit.INFO: Test 'testDataProvider with data set #3' ended. {"testName":"testDataProvider with data set #3","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testDataProvider with data set #3"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testDataProvider with data set #3 (1, 1, 3)","operation":"endTest","output":"","assertionCount":1} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite::testDataProvider' ended. {"suiteName":"Your\\Name_Space\\YourTestSuite::testDataProvider","testCount":3,"assertionCount":4,"failureCount":1,"errorCount":0,"incompleteCount":0,"skipCount":0,"riskyCount":0,"operation":"endTestSuite"} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' ended. {"suiteName":"Your\\Name_Space\\YourTestSuite","testCount":2,"assertionCount":3,"failureCount":1,"errorCount":0,"incompleteCount":1,"skipCount":1,"riskyCount":0,"operation":"endTestSuite"} []
+[2015-09-30 18:42:26] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' ended. {"suiteName":"Demo Test Suite","testCount":5,"assertionCount":7,"failureCount":2,"errorCount":0,"incompleteCount":1,"skipCount":1,"riskyCount":0,"operation":"endTestSuite"} []
 ----
 
 .Test Suite results with Growl Handler
