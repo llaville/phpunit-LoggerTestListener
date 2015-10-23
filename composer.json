@@ -37,8 +37,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Bartlett\\": "src/"
+        "psr-4": {
+            "Bartlett\\": "src/Bartlett"
         }
     }
 }
