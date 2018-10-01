@@ -7,8 +7,7 @@
  * @category   PHPUnit
  * @package    LoggerTestListener
  * @author     Laurent Laville <pear@laurent-laville.org>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    GIT: $Id$
+ * @license    https://opensource.org/licenses/BSD-3-Clause The 3-Clause BSD License
  */
 
 namespace Bartlett;
@@ -21,8 +20,7 @@ use Psr\Log\LoggerInterface;
  * @category   PHPUnit
  * @package    LoggerTestListener
  * @author     Laurent Laville <pear@laurent-laville.org>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
+ * @license    https://opensource.org/licenses/BSD-3-Clause The 3-Clause BSD License
  */
 class LoggerTestListener extends AbstractLoggerTestListener
 {

@@ -12,6 +12,10 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Util\Getopt as GetOptUtil;
+use PHPUnit\Util\Printer as PrinterUtil;
+
 /**
  * Helper to detect phpunit switches, due to lack of implementation in custom printer classes
  * @see https://github.com/sebastianbergmann/phpunit/issues/1674
@@ -20,7 +24,7 @@ trait GetOpt
 {
     public function isVerbose()
     {
-        list ($opts, $non_opts) = \PHPUnit_Util_Getopt::getopt(
+        list ($opts, $non_opts) = GetOptUtil::getopt(
             $_SERVER['argv'],
             'd:c:hv'
         );
@@ -39,7 +43,7 @@ trait GetOpt
 
     public function isDebug()
     {
-        list ($opts, $non_opts) = \PHPUnit_Util_Getopt::getopt(
+        list ($opts, $non_opts) = GetOptUtil::getopt(
             $_SERVER['argv'],
             'd:c:hv'
         );
@@ -92,7 +96,7 @@ class Psr3ConsoleLogger extends AbstractLogger
     }
 }
 
-class ResultPrinter extends \PHPUnit_Util_Printer implements \PHPUnit_Framework_TestListener
+class ResultPrinter extends PrinterUtil implements TestListener
 {
     use LoggerTestListenerTrait, LoggerAwareTrait, GetOpt;
 
