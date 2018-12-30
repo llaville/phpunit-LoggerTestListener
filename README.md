@@ -2,7 +2,7 @@
 # PHPUnit Test Suite listener for compatible PSR-3 logger
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/bartlett/phpunit-loggertestlistener.svg?style=flat-square)](https://packagist.org/packages/bartlett/phpunit-loggertestlistener)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg?style=flat-square)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.1-8892BF.svg?style=flat-square)](https://php.net/)
 
 
 Goal is to provide a standard PHPUnit Listener that is capable to send unit test results
@@ -18,6 +18,7 @@ and used these log levels/events mapping.
 
 **WARNING**
 
+    - `addWarning()`, on warning test
     - `addIncompleteTest()`, on incomplete test
     - `addRiskyTest()`, on risky test
     - `addSkippedTest()`, when a test was skipped

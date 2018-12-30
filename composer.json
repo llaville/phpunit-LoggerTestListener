@@ -8,20 +8,14 @@
         "source": "https://github.com/llaville/phpunit-LoggerTestListener",
         "issues": "https://github.com/llaville/phpunit-LoggerTestListener/issues"
     },
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "https://pear.php.net"
-        }
-    ],
     "require": {
-        "php": "^5.4||^7.0",
-        "psr/log": "^1.0"
+        "php": "^7.1",
+        "psr/log": "^1.0",
+        "phpunit/phpunit": "^7.0"
     },
     "require-dev": {
         "monolog/monolog": "^1.10",
-        "bartlett/monolog-callbackfilterhandler": "^1.0",
-        "bartlett/monolog-growlhandler": "^1.0"
+        "bartlett/monolog-callbackfilterhandler": "^1.0"
     },
     "suggest": {
         "monolog/monolog": "For advanced logging strategies",

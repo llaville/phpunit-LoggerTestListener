@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * A PHPUnit Test Listener pushing the test results to any logger compatible PSR-3.
  *
- * PHP version 5
+ * PHP version 7
  *
  * @category   PHPUnit
  * @package    LoggerTestListener
@@ -12,7 +15,6 @@
 
 namespace Bartlett;
 
-use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
@@ -22,7 +24,7 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Test as TestUtil;
 use PHPUnit\Util\Filter as FilterUtil;
-use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * This is a simple logger test listener trait that classes unable to extend AbstractLoggerTestListener
@@ -35,6 +37,9 @@ use Exception;
  */
 trait LoggerTestListenerTrait
 {
+    /** @var LoggerInterface */
+    protected $logger;
+
     /**
      * Results
      */
@@ -46,25 +51,20 @@ trait LoggerTestListenerTrait
     /**
      * An error occurred.
      *
-     * @param Test      $test
-     * @param Exception $e
-     * @param float     $time
-     *
-     * @return void
+     * @param Test $test
+     * @param \Throwable $t
+     * @param float $time
      */
-    public function addError(
-        Test $test,
-        Exception $e,
-        $time
-    ) {
+    public function addError(Test $test, \Throwable $t, float $time): void
+    {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
-            'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'reason'             => $t->getMessage(),
+            'trace'              => FilterUtil::getFilteredStacktrace($t),
         ];
 
         $this->logger->error(
@@ -76,13 +76,11 @@ trait LoggerTestListenerTrait
     /**
      * A warning occurred.
      *
-     * @param Test    $test
+     * @param Test $test
      * @param Warning $e
-     * @param float   $time
-     *
-     * @return void
+     * @param float $time
      */
-    public function addWarning(Test $test, Warning $e, $time)
+    public function addWarning(Test $test, Warning $e, float $time): void
     {
         $testName = $test->getName();
         $context  = [
@@ -103,25 +101,20 @@ trait LoggerTestListenerTrait
     /**
      * A failure occurred.
      *
-     * @param Test                 $test
+     * @param Test $test
      * @param AssertionFailedError $e
-     * @param float                $time
-     *
-     * @return void
+     * @param float $time
      */
-    public function addFailure(
-        Test $test,
-        AssertionFailedError $e,
-        $time
-    ) {
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
+    {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'trace'              => FilterUtil::getFilteredStacktrace($e),
         ];
 
         $this->logger->error(
@@ -133,25 +126,20 @@ trait LoggerTestListenerTrait
     /**
      * Incomplete test.
      *
-     * @param Test      $test
-     * @param Exception $e
-     * @param float     $time
-     *
-     * @return void
+     * @param Test $test
+     * @param \Throwable $t
+     * @param float $time
      */
-    public function addIncompleteTest(
-        Test $test,
-        Exception $e,
-        $time
-    ) {
+    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
+    {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
-            'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'reason'             => $t->getMessage(),
+            'trace'              => FilterUtil::getFilteredStacktrace($t),
         ];
 
         $this->logger->warning(
@@ -163,25 +151,20 @@ trait LoggerTestListenerTrait
     /**
      * Risky test.
      *
-     * @param Test      $test
-     * @param Exception $e
-     * @param float     $time
-     *
-     * @return void
+     * @param Test $test
+     * @param \Throwable $t
+     * @param float $time
      */
-    public function addRiskyTest(
-        Test $test,
-        Exception $e,
-        $time
-    ) {
+    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
+    {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
-            'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'reason'             => $t->getMessage(),
+            'trace'              => FilterUtil::getFilteredStacktrace($t),
         ];
 
         $this->logger->warning(
@@ -193,25 +176,20 @@ trait LoggerTestListenerTrait
     /**
      * Skipped test.
      *
-     * @param Test      $test
-     * @param Exception $e
-     * @param float     $time
-     *
-     * @return void
+     * @param Test $test
+     * @param \Throwable $t
+     * @param float $time
      */
-    public function addSkippedTest(
-        Test $test,
-        Exception $e,
-        $time
-    ) {
+    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
+    {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
-            'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'reason'             => $t->getMessage(),
+            'trace'              => FilterUtil::getFilteredStacktrace($t),
         ];
 
         $this->logger->warning(
@@ -221,18 +199,78 @@ trait LoggerTestListenerTrait
     }
 
     /**
+     * A test suite started.
+     *
+     * @param TestSuite $suite
+     */
+    public function startTestSuite(TestSuite $suite): void
+    {
+        $suiteName = $suite->getName();
+        $testCount = $suite->count();
+        $context   = [
+            'suiteName' => $suiteName,
+            'testCount' => $testCount,
+            'operation' => __FUNCTION__,
+        ];
+
+        $this->suites[] = $suiteName;
+
+        $this->stats[$suiteName] = [
+            'tests'       => 0,
+            'assertions'  => 0,
+            'failures'    => 0,
+            'errors'      => 0,
+            'incompletes' => 0,
+            'skips'       => 0,
+            'risky'       => 0,
+        ];
+
+        $this->logger->notice(
+            sprintf("TestSuite '%s' started with %d tests.", $suiteName, $testCount),
+            $context
+        );
+    }
+
+    /**
+     * A test suite ended.
+     *
+     * @param TestSuite $suite
+     */
+    public function endTestSuite(TestSuite $suite): void
+    {
+        $this->endedSuites++;
+
+        $suiteName = $suite->getName();
+
+        $context   = [
+            'suiteName'       => $suiteName,
+            'testCount'       => $this->stats[$suiteName]['tests'],
+            'assertionCount'  => $this->stats[$suiteName]['assertions'],
+            'failureCount'    => $this->stats[$suiteName]['failures'],
+            'errorCount'      => $this->stats[$suiteName]['errors'],
+            'incompleteCount' => $this->stats[$suiteName]['incompletes'],
+            'skipCount'       => $this->stats[$suiteName]['skips'],
+            'riskyCount'      => $this->stats[$suiteName]['risky'],
+            'operation'       => __FUNCTION__,
+        ];
+
+        $this->logger->notice(
+            sprintf("TestSuite '%s' ended.", $suiteName),
+            $context
+        );
+    }
+
+    /**
      * A test started.
      *
      * @param Test $test
-     *
-     * @return void
      */
-    public function startTest(Test $test)
+    public function startTest(Test $test): void
     {
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
         ];
@@ -246,12 +284,11 @@ trait LoggerTestListenerTrait
     /**
      * A test ended.
      *
-     * @param Test  $test
+     * @param Test $test
      * @param float $time
-     *
-     * @return void
+     * @throws \ReflectionException
      */
-    public function endTest(Test $test, $time)
+    public function endTest(Test $test, float $time): void
     {
         if ($test instanceof TestCase) {
             $assertionCount       = $test->getNumAssertions();
@@ -310,72 +347,6 @@ trait LoggerTestListenerTrait
     }
 
     /**
-     * A test suite started.
-     *
-     * @param TestSuite $suite
-     *
-     * @return void
-     */
-    public function startTestSuite(TestSuite $suite)
-    {
-        $suiteName = $suite->getName();
-        $testCount = $suite->count();
-        $context   = [
-            'suiteName' => $suiteName,
-            'testCount' => $testCount,
-            'operation' => __FUNCTION__,
-        ];
-
-        $this->suites[] = $suiteName;
-
-        $this->stats[$suiteName] = [
-            'tests'       => 0,
-            'assertions'  => 0,
-            'failures'    => 0,
-            'errors'      => 0,
-            'incompletes' => 0,
-            'skips'       => 0,
-            'risky'       => 0,
-        ];
-
-        $this->logger->notice(
-            sprintf("TestSuite '%s' started with %d tests.", $suiteName, $testCount),
-            $context
-        );
-    }
-
-    /**
-     * A test suite ended.
-     *
-     * @param TestSuite $suite
-     *
-     * @return void
-     */
-    public function endTestSuite(TestSuite $suite)
-    {
-        $this->endedSuites++;
-
-        $suiteName = $suite->getName();
-
-        $context   = [
-            'suiteName'       => $suiteName,
-            'testCount'       => $this->stats[$suiteName]['tests'],
-            'assertionCount'  => $this->stats[$suiteName]['assertions'],
-            'failureCount'    => $this->stats[$suiteName]['failures'],
-            'errorCount'      => $this->stats[$suiteName]['errors'],
-            'incompleteCount' => $this->stats[$suiteName]['incompletes'],
-            'skipCount'       => $this->stats[$suiteName]['skips'],
-            'riskyCount'      => $this->stats[$suiteName]['risky'],
-            'operation'       => __FUNCTION__,
-        ];
-
-        $this->logger->notice(
-            sprintf("TestSuite '%s' ended.", $suiteName),
-            $context
-        );
-    }
-
-    /**
      * Gets all test suites statistics
      */
     public function getStats()
@@ -388,9 +359,10 @@ trait LoggerTestListenerTrait
      *
      * PHPUnit\TextUI\ResultPrinter compatible
      *
+     * @param TestResult $result
      * @return void
      */
-    public function printFooter(TestResult $result)
+    public function printFooter(TestResult $result) : void
     {
         $testCount       = $result->count();
         $assertionCount  = $this->numAssertions;
@@ -436,7 +408,8 @@ trait LoggerTestListenerTrait
         $incompleteCount,
         $skipCount,
         $riskyCount
-    ) {
+    ) : string
+    {
         $resultMessage  = "Tests: $testCount, ";
         $resultMessage .= "Assertions: $assertionCount";
 
