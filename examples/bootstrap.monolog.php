@@ -38,15 +38,17 @@ class YourMonolog extends Logger
 
         $handlers = array($stream);
 
-        try {
-            // be notified only for test suites and test failures
-            $growl = new GrowlHandler(array(), Logger::NOTICE);
+        if (class_exists(GrowlHandler::class)) {
+            try {
+                // be notified only for test suites and test failures
+                $growl = new GrowlHandler(array(), Logger::NOTICE);
 
-            $handlers[] = new CallbackFilterHandler($growl, $filters);
+                $handlers[] = new CallbackFilterHandler($growl, $filters);
 
-        } catch (\Exception $e) {
-            // Growl server is probably not started
-            echo $e->getMessage(), PHP_EOL, PHP_EOL;
+            } catch (\Exception $e) {
+                // Growl server is probably not started
+                echo $e->getMessage(), PHP_EOL, PHP_EOL;
+            }
         }
 
         parent::__construct($name, $handlers);
