@@ -36,7 +36,6 @@ and used these log levels/events mapping.
 ## Installation
 
 **IMPORTANT**: For demonstration purpose, a Growl Handler and an AdvancedFilter Handler were used but are not yet available as a GitHub or Packagist version.
-Source code are provided in `extra` folder.
 
 ```bash
 $ composer require bartlett/phpunit-loggertestlistener
@@ -272,7 +271,7 @@ and only important notifications via `GrowlHandler` (see filter rule with callba
 Run the test suite example :
 
 ```bash
-$ php phpunit-6.5.13.phar -c examples/phpunit.monolog.xml
+$ phpunit -c examples/phpunit.monolog.xml
 ```
 
 And you will get something like:
