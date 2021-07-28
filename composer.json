@@ -9,13 +9,12 @@
         "issues": "https://github.com/llaville/phpunit-LoggerTestListener/issues"
     },
     "require": {
-        "php": "^7.1",
+        "php": ">=7.2",
         "psr/log": "^1.0",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^9"
     },
     "require-dev": {
-        "monolog/monolog": "^1.10",
-        "bartlett/monolog-callbackfilterhandler": "^1.0"
+        "monolog/monolog": "^2.3"
     },
     "suggest": {
         "monolog/monolog": "For advanced logging strategies",
