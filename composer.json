@@ -9,7 +9,7 @@
         "issues": "https://github.com/llaville/phpunit-LoggerTestListener/issues"
     },
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "psr/log": "^1.0",
         "phpunit/phpunit": "^9"
     },
