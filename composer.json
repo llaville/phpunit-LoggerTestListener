@@ -14,7 +14,7 @@
         "phpunit/phpunit": "^9"
     },
     "require-dev": {
-        "monolog/monolog": "^2.3"
+        "monolog/monolog": "^1.17"
     },
     "suggest": {
         "monolog/monolog": "For advanced logging strategies",
