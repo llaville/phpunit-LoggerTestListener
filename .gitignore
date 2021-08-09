@@ -1,3 +1,5 @@
 Thumbs.db
+.idea
+composer.lock
 vendor/
 examples/*.log
