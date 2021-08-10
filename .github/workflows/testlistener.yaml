@@ -24,19 +24,19 @@ jobs:
                     -
                         os: ubuntu-18.04
                         php: 7.2
-                        tools: phpstan, phpunit
+                        tools: phpstan, phpunit:7.5
                     -
                         os: ubuntu-18.04
                         php: 7.3
-                        tools: phpstan, phpunit
+                        tools: phpstan, phpunit:7.5
                     -
                         os: ubuntu-18.04
                         php: 7.4
-                        tools: phpstan, phpunit
+                        tools: phpstan, phpunit:8.5
                     -
                         os: ubuntu-18.04
                         php: 8.0
-                        tools: phpstan, phpunit
+                        tools: phpstan, phpunit:8.5
 
         name: "Test with PHP ${{ matrix.php }} on ${{ matrix.os }}"
 
