@@ -1,0 +1,68 @@
+name: TestListener
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+
+jobs:
+    php_tests:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - ubuntu-18.04
+                php:
+                    - 7.2
+                    - 7.3
+                    - 7.4
+                    - 8.0
+                include:
+                    -
+                        os: ubuntu-18.04
+                        php: 7.2
+                        tools: phpstan, phpunit
+                    -
+                        os: ubuntu-18.04
+                        php: 7.3
+                        tools: phpstan, phpunit
+                    -
+                        os: ubuntu-18.04
+                        php: 7.4
+                        tools: phpstan, phpunit
+                    -
+                        os: ubuntu-18.04
+                        php: 8.0
+                        tools: phpstan, phpunit
+
+        name: "Test with PHP ${{ matrix.php }} on ${{ matrix.os }}"
+
+        steps:
+            -
+                name: Checkout
+                uses: actions/checkout@v2
+
+            -
+                name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    tools: ${{ matrix.tools }}
+
+            -
+                name: Install Composer dependencies
+                uses: "ramsey/composer-install@v1"
+                with:
+                    dependency-versions: "highest"
+                    composer-options: "--prefer-dist"
+
+            -
+                name: Static Analysis
+                run: phpstan analyse --ansi
+
+            -
+                name: TestListener with Printer logger
+                run: phpunit -c examples/phpunit.printer.xml
