@@ -1,9 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-$baseDir   = dirname(__DIR__);
-$vendorDir = $baseDir . '/vendor';
-
-require_once $vendorDir . '/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
