@@ -37,8 +37,8 @@ and used these log levels/events mapping.
 
 **IMPORTANT**: For demonstration purpose, a Growl Handler and an AdvancedFilter Handler were used but are not yet available as a GitHub or Packagist version.
 
-```bash
-$ composer require bartlett/phpunit-loggertestlistener
+```shell
+composer require bartlett/phpunit-loggertestlistener
 ```
 
 
@@ -270,13 +270,13 @@ and only important notifications via `GrowlHandler` (see filter rule with callba
 
 Run the test suite example :
 
-```bash
-$ phpunit -c examples/phpunit.monolog.xml
+```shell
+phpunit -c examples/phpunit.monolog.xml
 ```
 
 And you will get something like:
 
-```bash
+```shell
 PHPUnit 7.5.1 by Sebastian Bergmann and contributors.
 
 IRSF....F                                                           9 / 9 (100%)
@@ -310,7 +310,7 @@ Tests: 9, Assertions: 7, Failures: 2, Skipped: 1, Incomplete: 1, Risky: 1.
 
 **Test Suite results with Monolog Stream Handler**
 
-```bash
+```shell
 [2018-12-30 11:00:19] PHPUnit.NOTICE: TestSuite 'Demo Test Suite' started with 9 tests. {"suiteName":"Demo Test Suite","testCount":9,"operation":"startTestSuite"} []
 [2018-12-30 11:00:19] PHPUnit.NOTICE: TestSuite 'Your\Name_Space\YourTestSuite' started with 9 tests. {"suiteName":"Your\\Name_Space\\YourTestSuite","testCount":9,"operation":"startTestSuite"} []
 [2018-12-30 11:00:19] PHPUnit.INFO: Test 'testIncomplete' started. {"testName":"testIncomplete","testDescriptionArr":["Your\\Name_Space\\YourTestSuite","testIncomplete"],"testDescriptionStr":"Your\\Name_Space\\YourTestSuite::testIncomplete","operation":"startTest"} []
