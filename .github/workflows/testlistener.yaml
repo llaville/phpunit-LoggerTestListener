@@ -65,4 +65,4 @@ jobs:
 
             -
                 name: TestListener with Printer logger
-                run: phpunit -c examples/phpunit.printer.xml
+                run: /usr/local/bin/phpunit -c examples/phpunit.printer.xml
