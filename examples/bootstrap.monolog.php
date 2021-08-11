@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/vendor' . '/autoload.php';
 
@@ -7,6 +7,8 @@ use Monolog\Handler\RotatingFileHandler;
 
 use Bartlett\Monolog\Handler\GrowlHandler;
 use Bartlett\Monolog\Handler\CallbackFilterHandler;
+
+use PHPUnit\Runner\Version;
 
 class YourMonolog extends Logger
 {
@@ -27,7 +29,7 @@ class YourMonolog extends Logger
         );
 
         $stream = new RotatingFileHandler(
-            __DIR__ . DIRECTORY_SEPARATOR . 'monologTestListener.log',
+            __DIR__ . DIRECTORY_SEPARATOR . 'monologTestListener-phpunit-' . Version::series() . '.log',
             0, // maximal amount of files to keep (0 means unlimited)
             Logger::toMonologLevel($level)
         );
@@ -42,7 +44,7 @@ class YourMonolog extends Logger
 
                 $handlers[] = new CallbackFilterHandler($growl, $filters);
 
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Growl server is probably not started
                 echo $e->getMessage(), PHP_EOL, PHP_EOL;
             }
