@@ -1,9 +1,6 @@
 <?php
 
-$baseDir   = dirname(__DIR__);
-$vendorDir = $baseDir . '/vendor';
-
-require_once $vendorDir . '/autoload.php';
+require_once dirname(__DIR__) . '/vendor' . '/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;

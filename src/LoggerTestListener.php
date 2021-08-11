@@ -1,7 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
+<?php declare(strict_types=1);
 /**
  * A PHPUnit Test Listener pushing the test results to any logger compatible PSR-3.
  *
@@ -14,6 +11,10 @@ declare(strict_types=1);
  */
 
 namespace Bartlett;
+
+use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\ProcessableHandlerInterface;
+use Monolog\Logger;
 
 use Psr\Log\LoggerInterface;
 
@@ -30,26 +31,29 @@ class LoggerTestListener extends AbstractLoggerTestListener
     /**
      * Initialize test listener.
      *
-     * @param LoggerInterface                     $logger     Any logger compatible PSR-3
-     * @param \Monolog\Handler\HandlerInterface[] $handlers   Optional stack of handlers
-     * @param callable[]                          $processors Optional array of processors
+     * @param LoggerInterface    $logger     Any logger compatible PSR-3
+     * @param HandlerInterface[] $handlers   Optional stack of handlers
+     * @param callable[]         $processors Optional array of processors
      */
     public function __construct(
         LoggerInterface $logger,
         array $handlers = [],
         array $processors = []
     ) {
-        $this->logger = $logger;
-
-        if ($logger instanceof \Monolog\Logger) {
+        if ($logger instanceof Logger) {
             // add some handlers
             foreach ($handlers as $handler) {
-                $this->logger->pushHandler($handler);
-            }
-            // add some processors
-            foreach ($processors as $processor) {
-                $this->logger->pushProcessor($processor);
+                $logger->pushHandler($handler);
             }
         }
+
+        if ($logger instanceof ProcessableHandlerInterface) {
+            // add some processors
+            foreach ($processors as $processor) {
+                $logger->pushProcessor($processor);
+            }
+        }
+
+        $this->logger = $logger;
     }
 }

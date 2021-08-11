@@ -9,6 +9,11 @@ using the [Keep a CHANGELOG](http://keepachangelog.com) principles.
 
 - `CHANGELOG.md` file to follow changes to this project
 
+### Changed
+
+- drop PHP 7.1 support
+- drop Monolog 1.x support
+
 ## [2.0.0] - 2019-01-05
 
 ### Changed
