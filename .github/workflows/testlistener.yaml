@@ -7,7 +7,7 @@ on:
     pull_request:
 
 jobs:
-    php_tests:
+    testlistener:
         runs-on: ${{ matrix.os }}
 
         strategy:
@@ -28,7 +28,7 @@ jobs:
                     -
                         os: ubuntu-18.04
                         php: 7.3
-                        tools: phpstan, phpunit:7.5
+                        tools: phpstan, phpunit:8.5
                     -
                         os: ubuntu-18.04
                         php: 7.4
@@ -36,7 +36,7 @@ jobs:
                     -
                         os: ubuntu-18.04
                         php: 8.0
-                        tools: phpstan, phpunit:8.5
+                        tools: phpstan, phpunit:9.5
 
         name: "Test with PHP ${{ matrix.php }} on ${{ matrix.os }}"
 
