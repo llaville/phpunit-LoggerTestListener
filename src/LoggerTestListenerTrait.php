@@ -1,7 +1,4 @@
-<?php
-
-declare(strict_types=1);
-
+<?php declare(strict_types=1);
 /**
  * A PHPUnit Test Listener pushing the test results to any logger compatible PSR-3.
  *
@@ -24,7 +21,15 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Test as TestUtil;
 use PHPUnit\Util\Filter as FilterUtil;
+
 use Psr\Log\LoggerInterface;
+
+use Throwable;
+use function count;
+use function end;
+use function method_exists;
+use function reset;
+use function sprintf;
 
 /**
  * This is a simple logger test listener trait that classes unable to extend AbstractLoggerTestListener
@@ -52,10 +57,10 @@ trait LoggerTestListenerTrait
      * An error occurred.
      *
      * @param Test $test
-     * @param \Throwable $t
+     * @param Throwable $t
      * @param float $time
      */
-    public function addError(Test $test, \Throwable $t, float $time): void
+    public function addError(Test $test, Throwable $t, float $time): void
     {
         $testName = $test->getName();
         $context  = [
@@ -127,10 +132,10 @@ trait LoggerTestListenerTrait
      * Incomplete test.
      *
      * @param Test $test
-     * @param \Throwable $t
+     * @param Throwable $t
      * @param float $time
      */
-    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
+    public function addIncompleteTest(Test $test, Throwable $t, float $time): void
     {
         $testName = $test->getName();
         $context  = [
@@ -152,10 +157,10 @@ trait LoggerTestListenerTrait
      * Risky test.
      *
      * @param Test $test
-     * @param \Throwable $t
+     * @param Throwable $t
      * @param float $time
      */
-    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
+    public function addRiskyTest(Test $test, Throwable $t, float $time): void
     {
         $testName = $test->getName();
         $context  = [
@@ -177,10 +182,10 @@ trait LoggerTestListenerTrait
      * Skipped test.
      *
      * @param Test $test
-     * @param \Throwable $t
+     * @param Throwable $t
      * @param float $time
      */
-    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
+    public function addSkippedTest(Test $test, Throwable $t, float $time): void
     {
         $testName = $test->getName();
         $context  = [
@@ -286,7 +291,6 @@ trait LoggerTestListenerTrait
      *
      * @param Test $test
      * @param float $time
-     * @throws \ReflectionException
      */
     public function endTest(Test $test, float $time): void
     {
@@ -348,8 +352,10 @@ trait LoggerTestListenerTrait
 
     /**
      * Gets all test suites statistics
+     *
+     * @return array<string, array>
      */
-    public function getStats()
+    public function getStats(): array
     {
         return $this->stats;
     }
@@ -400,14 +406,24 @@ trait LoggerTestListenerTrait
         $this->logger->notice($resultMessage, $context);
     }
 
+    /**
+     * @param int $testCount
+     * @param int $assertionCount
+     * @param int $failureCount
+     * @param int $errorCount
+     * @param int $incompleteCount
+     * @param int $skipCount
+     * @param int $riskyCount
+     * @return string
+     */
     protected function formatCounters(
-        $testCount,
-        $assertionCount,
-        $failureCount,
-        $errorCount,
-        $incompleteCount,
-        $skipCount,
-        $riskyCount
+        int $testCount,
+        int $assertionCount,
+        int $failureCount,
+        int $errorCount,
+        int $incompleteCount,
+        int $skipCount,
+        int $riskyCount
     ) : string
     {
         $resultMessage  = "Tests: $testCount, ";
