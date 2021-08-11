@@ -90,11 +90,11 @@ trait LoggerTestListenerTrait
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'reason'             => $e->getMessage(),
-            'trace'              => FilterUtil::getFilteredStacktrace($e, false),
+            'trace'              => FilterUtil::getFilteredStacktrace($e),
         ];
 
         $this->logger->warning(
@@ -334,7 +334,7 @@ trait LoggerTestListenerTrait
         $testName = $test->getName();
         $context  = [
             'testName'           => $testName,
-            'testDescriptionArr' => TestUtil::describe($test, false),
+            'testDescriptionArr' => TestUtil::describe($test),
             'testDescriptionStr' => $test->toString(),
             'operation'          => __FUNCTION__,
             'output'             => $output,
