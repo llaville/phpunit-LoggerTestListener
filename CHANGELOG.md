@@ -5,9 +5,14 @@ using the [Keep a CHANGELOG](http://keepachangelog.com) principles.
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-08-12
+
+**CAUTION** : PHPUnit 9 is not supported due to issue PHPUnit [#4754](https://github.com/sebastianbergmann/phpunit/issues/4754)
+
 ### Added
 
 - `CHANGELOG.md` file to follow changes to this project
+- support to PHPUnit 8
 
 ### Changed
 
