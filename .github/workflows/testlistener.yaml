@@ -60,9 +60,5 @@ jobs:
                     composer-options: "--prefer-dist"
 
             -
-                name: Static Analysis
-                run: phpstan analyse --ansi
-
-            -
                 name: TestListener with Printer logger
                 run: /usr/local/bin/phpunit -c examples/phpunit.printer.xml
