@@ -1,4 +1,4 @@
-
+<!-- markdownlint-disable MD013 MD046 -->
 # PHPUnit Test Suite listener for compatible PSR-3 logger
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/bartlett/phpunit-loggertestlistener.svg?style=flat-square)](https://packagist.org/packages/bartlett/phpunit-loggertestlistener)
@@ -346,7 +346,7 @@ Tests: 9, Assertions: 7, Failures: 2, Skipped: 1, Incomplete: 1, Risky: 1.
 
 ![Growl Notifications](./examples/growlOutput.png)
 
-**NOTE**: Produced by [Growl for Windows](http://www.growlforwindows.com/gfw/) (2.0.9 and Smokestack display)
+**NOTE**: Produced by [Growl for Windows](http://www.growlforwindows.com/) (2.0.9 and Smokestack display)
 with [PHP GNTP library](http://growl.laurent-laville.org/).
 
 ## License
