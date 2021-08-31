@@ -7,6 +7,10 @@ using the [Keep a CHANGELOG](http://keepachangelog.com) principles.
 
 ## [Unreleased]
 
+### Added
+
+- [Mega-Linter](https://github.com/nvuillam/mega-linter) support as QA tool to avoid technical debt
+
 ## [2.1.0] - 2021-08-12
 
 **CAUTION** : PHPUnit 9 is not supported due to issue PHPUnit [#4754](https://github.com/sebastianbergmann/phpunit/issues/4754)
