@@ -52,13 +52,13 @@ trait GetOpt
         $parameters = $_SERVER['argv'];
         $shortOptions = 'd:c:hv';
         if (version_compare(Version::id(), '9.3.8', 'ge')) {
-            return (new CliParser)->parse($parameters, $shortOptions);
+            return (new CliParser())->parse($parameters, $shortOptions);
         }
         if (version_compare(Version::id(), '8.5.9', 'ge')) {
             // @see https://github.com/sebastianbergmann/phpunit/commit/d5d1ee19a5f04a022ae1dd00590ccf60ec269b16
-            return GetOptUtil::parse($parameters, $shortOptions);
+            return GetOptUtil::parse($parameters, $shortOptions);   /** @phpstan-ignore-line */
         }
-        return GetOptUtil::getopt($parameters, $shortOptions);
+        return GetOptUtil::getopt($parameters, $shortOptions);  /** @phpstan-ignore-line */
     }
 }
 

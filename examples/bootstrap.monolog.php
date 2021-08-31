@@ -20,7 +20,7 @@ class YourMonolog extends Logger
          * - summary of test suites (message "Results OK ...", or "Results KO ..."
          */
         $filters = array(
-            function($record, $handlerLevel) {
+            function ($record, $handlerLevel) {
                 if ($record['level'] > $handlerLevel) {
                     return true;
                 }
@@ -43,7 +43,6 @@ class YourMonolog extends Logger
                 $growl = new GrowlHandler(array(), Logger::NOTICE);
 
                 $handlers[] = new CallbackFilterHandler($growl, $filters);
-
             } catch (Exception $e) {
                 // Growl server is probably not started
                 echo $e->getMessage(), PHP_EOL, PHP_EOL;

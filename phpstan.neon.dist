@@ -2,3 +2,7 @@ parameters:
     level: 1
     paths:
         - src/
+    bootstrapFiles:
+        - examples/bootstrap.monolog.php
+        - examples/bootstrap.printer.php
+        - examples/bootstrap.psr3.php

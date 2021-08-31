@@ -9,11 +9,11 @@ class YourTestSuite extends TestCase
     public function testIncomplete()
     {
         // Optional: Test anything here, if you want.
-        $this->assertTrue(TRUE, 'This should already work.');
+        $this->assertTrue(true, 'This should already work.');
 
         // Stop here and mark this test as incomplete.
         $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+            'This test has not been implemented yet.'
         );
     }
 
@@ -33,7 +33,7 @@ class YourTestSuite extends TestCase
 
     public function testPass()
     {
-        $this->assertTrue(TRUE, 'This should always work.');
+        $this->assertTrue(true, 'This should always work.');
     }
 
     /**

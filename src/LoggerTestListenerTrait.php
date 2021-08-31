@@ -368,7 +368,7 @@ trait LoggerTestListenerTrait
      * @param TestResult $result
      * @return void
      */
-    public function printFooter(TestResult $result) : void
+    public function printFooter(TestResult $result): void
     {
         $testCount       = $result->count();
         $assertionCount  = $this->numAssertions;
@@ -424,8 +424,7 @@ trait LoggerTestListenerTrait
         int $incompleteCount,
         int $skipCount,
         int $riskyCount
-    ) : string
-    {
+    ): string {
         $resultMessage  = "Tests: $testCount, ";
         $resultMessage .= "Assertions: $assertionCount";
 

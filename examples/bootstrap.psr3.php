@@ -24,11 +24,11 @@ class LineFormatter
         $vars['message'] = $this->interpolate($record['message'], $record['context']);
 
         foreach ($vars as $var => $val) {
-            if (false !== strpos($output, '%'.$var.'%')) {
+            if (false !== strpos($output, '%' . $var . '%')) {
                 if ($val instanceof \DateTime) {
                     $val = $val->format("Y-m-d H:i:s");
                 }
-                $output = str_replace('%'.$var.'%', $val, $output);
+                $output = str_replace('%' . $var . '%', $val, $output);
             }
         }
 
