@@ -4,3 +4,4 @@ composer.lock
 vendor/
 examples/*.log
 examples/.phpunit.result.cache
+report/
