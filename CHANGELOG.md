@@ -11,6 +11,10 @@ using the [Keep a CHANGELOG](http://keepachangelog.com) principles.
 
 - [Mega-Linter](https://github.com/nvuillam/mega-linter) support as QA tool to avoid technical debt
 
+### Changed
+
+- As PHPUnit 9 is not supported due to issue PHPUnit #4754, we removed composer constraint accordingly
+
 ## [2.1.0] - 2021-08-12
 
 **CAUTION** : PHPUnit 9 is not supported due to issue PHPUnit [#4754](https://github.com/sebastianbergmann/phpunit/issues/4754)
