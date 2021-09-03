@@ -107,5 +107,5 @@ jobs:
                     composer-options: "--prefer-dist"
 
             -
-                name: TestListener with Printer logger
-                run: /usr/local/bin/phpunit -c examples/phpunit.printer.xml
+                name: TestListener unit tests
+                run: phpunit
