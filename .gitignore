@@ -5,3 +5,4 @@ vendor/
 examples/*.log
 examples/.phpunit.result.cache
 report/
+.phpunit.result.cache
