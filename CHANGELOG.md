@@ -7,9 +7,12 @@ using the [Keep a CHANGELOG](http://keepachangelog.com) principles.
 
 ## [Unreleased]
 
+## [2.2.0] - 2021-09-03
+
 ### Added
 
 - [Mega-Linter](https://github.com/nvuillam/mega-linter) support as QA tool to avoid technical debt
+- Unit tests
 
 ### Changed
 

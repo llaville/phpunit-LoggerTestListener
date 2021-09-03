@@ -2,6 +2,8 @@ parameters:
     level: 1
     paths:
         - src/
+    excludePaths:
+        - examples/bootstrap.printer.php    # because since PHPUnit 9.0.0, PHPUnit\TextUI\ResultPrinter became an interface
     bootstrapFiles:
         - examples/bootstrap.monolog.php
         - examples/bootstrap.printer.php

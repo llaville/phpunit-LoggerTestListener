@@ -27,7 +27,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Bartlett\\": "src/"
+            "Bartlett\\": "src/",
+            "Bartlett\\Tests\\": "tests/"
         }
     }
 }
